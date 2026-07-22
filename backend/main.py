@@ -7,7 +7,7 @@ from routers import auth, categories, products, baraban, users, dashboard
 from utils.auth import get_password_hash
 from sqlalchemy.orm import Session
 
-app = FastAPI(title="Do'kon Admin API", version="1.0.0")
+app = FastAPI(title="Do'kon Admin API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,23 +27,23 @@ app.include_router(dashboard.router)
 
 @app.on_event("startup")
 def startup():
+    # DEV: yangi sxema bilan qayta yaratish
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
-    # Default admin yaratish
+    # Default admin
     db = Session(engine)
     try:
-        existing = db.query(models.AdminUser).filter(models.AdminUser.username == "admin").first()
-        if not existing:
-            admin = models.AdminUser(
-                username="admin",
-                hashed_password=get_password_hash("admin123")
-            )
-            db.add(admin)
-            db.commit()
-            print("Default admin yaratildi: login=admin, parol=admin123")
+        admin = models.AdminUser(
+            username="admin",
+            hashed_password=get_password_hash("admin123")
+        )
+        db.add(admin)
+        db.commit()
+        print("✅ Jadvallar yangilandi. Default admin: admin / admin123")
     finally:
         db.close()
 
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "message": "Do'kon Admin API ishlayapti"}
+    return {"status": "ok", "message": "Do'kon Admin API v2 ishlayapti"}

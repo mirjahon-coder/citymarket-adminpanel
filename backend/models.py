@@ -18,34 +18,142 @@ class Category(Base):
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
+    # Asosiy nom
     name = Column(String(200), nullable=False)
+    name_uz = Column(String(200), nullable=True)
+    name_ru = Column(String(200), nullable=True)
+    name_en = Column(String(200), nullable=True)
+    # Meta
+    slug = Column(String(200), nullable=True)
     description = Column(Text, nullable=True)
-    image_url = Column(String(500), nullable=True)
+    # Rasmlar
+    icon_url = Column(String(500), nullable=True)
+    image_url = Column(String(500), nullable=True)   # asosiy rasm
+    banner_url = Column(String(500), nullable=True)
+    cover_url = Column(String(500), nullable=True)
+    # Joylashuv va tartib
+    location = Column(String(300), nullable=True)
+    parent_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    sort_order = Column(Integer, default=0)
+    # Holat flaglari
     is_active = Column(Boolean, default=True)
+    show_on_home = Column(Boolean, default=False)
+    show_in_menu = Column(Boolean, default=True)
+    is_popular = Column(Boolean, default=False)
+    is_new = Column(Boolean, default=False)
+    is_recommended = Column(Boolean, default=False)
+    filter_enabled = Column(Boolean, default=False)
+    show_in_discount = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     products = relationship("Product", back_populates="category")
+    children = relationship("Category", foreign_keys=[parent_id], backref="parent", remote_side="Category.id")
 
 
 class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
+    # Nomlar
     name = Column(String(300), nullable=False)
+    name_uz = Column(String(300), nullable=True)
+    name_ru = Column(String(300), nullable=True)
+    name_en = Column(String(300), nullable=True)
+    # Identifikatorlar
+    sku = Column(String(100), nullable=True)
+    barcode = Column(String(100), nullable=True)
+    brand = Column(String(200), nullable=True)
+    manufacturer = Column(String(200), nullable=True)
+    model_name = Column(String(200), nullable=True)
+    # Kategoriya
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    subcategory = Column(String(200), nullable=True)
+    tags = Column(JSON, nullable=True)  # ['tag1', 'tag2']
+    # Tavsiflar
+    short_description = Column(Text, nullable=True)
     description = Column(Text, nullable=True)
     full_description = Column(Text, nullable=True)
-    price = Column(Float, nullable=False)
-    discount_price = Column(Float, nullable=True)
-    has_discount = Column(Boolean, default=False)
-    stock = Column(Integer, default=0)
-    sku = Column(String(100), nullable=True)
-    brand = Column(String(200), nullable=True)
-    weight = Column(Float, nullable=True)
-    dimensions = Column(String(200), nullable=True)
+    # Rasmlar
+    main_image_url = Column(String(500), nullable=True)
+    gallery_images = Column(JSON, nullable=True)   # ['url1','url2']
+    image_360_url = Column(String(500), nullable=True)
     video_url = Column(String(500), nullable=True)
+    # Narxlar
+    price = Column(Float, nullable=False, default=0)          # original narx
+    sale_price = Column(Float, nullable=True)                 # sotuv narxi
+    purchase_price = Column(Float, nullable=True)             # xarid narxi
+    cashback_percent = Column(Float, nullable=True, default=0)
+    bonus_points = Column(Float, nullable=True, default=0)
+    vat_percent = Column(Float, nullable=True, default=0)
+    # Ombor
+    warehouse_name = Column(String(200), nullable=True)
+    stock = Column(Integer, default=0)
+    min_quantity = Column(Integer, default=1)
+    max_order_qty = Column(Integer, nullable=True)
+    user_order_limit = Column(Integer, nullable=True)
+    # Yetkazib berish
+    weight = Column(Float, nullable=True)
+    length_cm = Column(Float, nullable=True)
+    width_cm = Column(Float, nullable=True)
+    height_cm = Column(Float, nullable=True)
+    delivery_type = Column(String(100), nullable=True)
+    delivery_price = Column(Float, nullable=True, default=0)
+    free_delivery_from = Column(Float, nullable=True)
+    # Variantlar va xususiyatlar
+    variants = Column(JSON, nullable=True)  # [{type,name,price,stock,sku,barcode,image_url}]
+    specs = Column(JSON, nullable=True)     # [{key,value}]
+    # SEO
+    seo_title = Column(String(300), nullable=True)
+    seo_description = Column(Text, nullable=True)
+    seo_keywords = Column(String(500), nullable=True)
+    canonical_url = Column(String(500), nullable=True)
+    # Statistikalar
+    views_count = Column(Integer, default=0)
+    sold_count = Column(Integer, default=0)
+    rating = Column(Float, default=0.0)
+    reviews_count = Column(Integer, default=0)
+    # Holat (asosiy)
     is_active = Column(Boolean, default=True)
-    is_featured = Column(Boolean, default=False)
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    is_in_stock = Column(Boolean, default=True)
+    # Holat (qo'shimcha flaglar)
+    is_new = Column(Boolean, default=False)
+    is_popular = Column(Boolean, default=False)
+    is_recommended = Column(Boolean, default=False)
+    is_premium = Column(Boolean, default=False)
+    is_bestseller = Column(Boolean, default=False)
+    is_flash_sale = Column(Boolean, default=False)
+    is_day_product = Column(Boolean, default=False)
+    is_week_product = Column(Boolean, default=False)
+    is_month_product = Column(Boolean, default=False)
+    is_trend = Column(Boolean, default=False)
+    has_discount = Column(Boolean, default=False)
+    discount_ending = Column(Boolean, default=False)
+    is_free_delivery = Column(Boolean, default=False)
+    has_cashback = Column(Boolean, default=False)
+    has_warranty = Column(Boolean, default=False)
+    is_original = Column(Boolean, default=False)
+    is_certified = Column(Boolean, default=False)
+    is_import = Column(Boolean, default=False)
+    is_local = Column(Boolean, default=False)
+    is_returnable = Column(Boolean, default=False)
+    is_exchangeable = Column(Boolean, default=False)
+    is_online_payment = Column(Boolean, default=True)
+    is_installment = Column(Boolean, default=False)
+    show_description = Column(Boolean, default=True)
+    show_specs = Column(Boolean, default=True)
+    allow_reviews = Column(Boolean, default=True)
+    allow_qa = Column(Boolean, default=True)
+    allow_rating = Column(Boolean, default=True)
+    allow_wishlist = Column(Boolean, default=True)
+    allow_compare = Column(Boolean, default=True)
+    show_in_recommended = Column(Boolean, default=False)
+    show_on_home = Column(Boolean, default=False)
+    show_in_banner = Column(Boolean, default=False)
+    show_in_carousel = Column(Boolean, default=False)
+    is_secret = Column(Boolean, default=False)
+    is_archived = Column(Boolean, default=False)
+    is_moderated = Column(Boolean, default=True)
+    # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -113,7 +221,7 @@ class Baraban(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(200), nullable=False)
-    target_audience = Column(String(50), default="yoshlar")  # yoshlar, kattallar
+    target_audience = Column(String(50), default="yoshlar")
     description = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -130,9 +238,9 @@ class BarabanPrize(Base):
     description = Column(Text, nullable=True)
     image_url = Column(String(500), nullable=True)
     is_mega_prize = Column(Boolean, default=False)
-    probability_type = Column(String(50), default="count")  # count, percent
-    probability_value = Column(Float, default=10.0)  # Foiz yoki necha marta 1da bitta
-    total_count = Column(Integer, default=10)  # Umumiy sondan nechta sovg'a
+    probability_type = Column(String(50), default="count")
+    probability_value = Column(Float, default=10.0)
+    total_count = Column(Integer, default=10)
     order_index = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
 
