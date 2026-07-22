@@ -1,45 +1,51 @@
-# [Project name]
+# Do'kon Admin Panel
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Oziq-ovqat va uy-ro'zg'or buyumlari do'koni uchun admin boshqaruv paneli. Vue.js frontend + FastAPI backend.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Backend: `cd backend && uvicorn main:app --reload --port 8000` — FastAPI server
+- Frontend: `cd frontend && npm run dev` — Vue.js admin panel (port 3000)
+- Default login: `admin` / `admin123`
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- **Frontend**: Vue 3 + Vite + Vue Router + Pinia + Axios — `frontend/` papkasida
+- **Backend**: FastAPI + SQLAlchemy + Psycopg2 — `backend/` papkasida
+- **Database**: PostgreSQL (DATABASE_URL env)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `frontend/` — Vue.js admin panel (login, dashboard, kategoriyalar, mahsulotlar, baraban, foydalanuvchilar)
+- `backend/` — FastAPI REST API
+- `backend/models.py` — SQLAlchemy modellari
+- `backend/routers/` — API routerlari
+- `backend/schemas.py` — Pydantic schemalar
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Frontend Vite proxy orqali `/api` so'rovlarini backend 8000-portiga yo'naltiradi
+- JWT token localStorage'da saqlanadi
+- Baraban tizimi: "count" (necha marta ichida 1 ta) va "percent" (foiz) turlari
+- Default admin avtomatik yaratiladi (admin/admin123)
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Dashboard: statistikalar ko'rish
+- Kategoriyalar: CRUD
+- Mahsulotlar: to'liq ma'lumot, chegirma, video, rasm
+- Baraban: yoshlar/kattallar uchun sovg'ali baraban tizimi
+- Mijozlar: bloklash, buyurtmalar tarixi
+- Adminlar: yangi admin qo'shish
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Vue.js frontend (oddiy CSS, ko'k/oq palitra)
+- FastAPI backend
+- PostgreSQL database
+- `frontend/` va `backend/` papkalar strukturasi
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Backend va frontend alohida portlarda ishlaydi (8000 va 3000)
+- `DATABASE_URL` runtime tomonidan ta'minlanadi
