@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session
 from database import get_db
 import models
 
-SECRET_KEY = os.environ.get("SESSION_SECRET", "supersecretkey123456789")
+SECRET_KEY = os.environ.get("SESSION_SECRET") or os.environ.get("JWT_SECRET")
+if not SECRET_KEY:
+    raise RuntimeError("SESSION_SECRET yoki JWT_SECRET environment o'zgaruvchisi topilmadi")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 soat
 

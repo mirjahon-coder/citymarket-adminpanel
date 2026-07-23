@@ -474,8 +474,7 @@ const tagsInput = ref('')
 const galleryList = ref([])
 
 const steps = [
-  'Asosiy', 'Tavsif', 'Rasmlar', 'Narx & Ombor',
-  'Yetkazish', 'Variantlar', 'Xususiyatlar & SEO', 'Holat'
+  'Asosiy', 'Media', 'Narx & Ombor', 'Holat'
 ]
 
 const flagsMain = [

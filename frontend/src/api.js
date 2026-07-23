@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '',
+  // Empty in local development so Vite can proxy /api to FastAPI.
+  // Set VITE_API_URL when the frontend and backend use different domains.
+  baseURL: import.meta.env.VITE_API_URL || '',
   timeout: 15000
 })
 

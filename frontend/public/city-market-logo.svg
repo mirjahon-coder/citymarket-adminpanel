@@ -1,0 +1,26 @@
+<svg width="720" height="720" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="720" fill="#fff"/>
+  <circle cx="360" cy="360" r="330" fill="none" stroke="#369b12" stroke-width="9"/>
+  <path d="M154 205 Q360 80 566 205 M165 520 Q360 625 555 520" fill="none" stroke="#369b12" stroke-width="7"/>
+  <g fill="#369b12">
+    <path d="M280 206h28v-65h13v65h12V98h30v108h14v-52h20v52h14V80h34v126h15v-77h28v77h16v-43h18v43h17v-66h25v66h14v-29h15v58H280z"/>
+  </g>
+  <g stroke="#fff" stroke-width="5" fill="none">
+    <path d="M320 122v64M371 102v83M421 119v67M472 141v45M518 155v31"/>
+  </g>
+  <g stroke="#0f4e2e" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 225l69 16 48 166c5 18 21 30 40 30h183" fill="none" stroke-width="16"/>
+    <path d="M250 247l276 18-33 132H292z" fill="#fff" stroke-width="11"/>
+    <path d="M283 282l236 15M294 322l215 13M306 360l204 10M331 248l-18 142M387 252l-13 139M441 255l-9 136M488 258l-6 133" fill="none" stroke-width="8"/>
+    <circle cx="327" cy="471" r="22" fill="#fff" stroke-width="11"/>
+    <circle cx="479" cy="471" r="22" fill="#fff" stroke-width="11"/>
+  </g>
+  <g fill="#369b12">
+    <path d="M215 220c-31-27-48-50-44-75 27 4 47 24 48 54 12-31 36-46 62-43-5 33-29 55-66 64z"/>
+    <path d="M220 218c-3-37-18-63-45-75" fill="none" stroke="#369b12" stroke-width="7"/>
+  </g>
+  <text x="78" y="548" font-family="Arial, sans-serif" font-size="91" font-weight="700" font-style="italic" fill="#0b3d25">City</text>
+  <text x="298" y="548" font-family="Arial, sans-serif" font-size="91" font-weight="700" font-style="italic" fill="#369b12">Market</text>
+  <path d="M140 578h150M430 578h150" stroke="#369b12" stroke-width="5"/>
+  <text x="360" y="611" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="7" fill="#0b3d25">ENG YAXSHI TANLOV - SIZ UCHUN!</text>
+</svg>

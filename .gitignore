@@ -5,11 +5,19 @@ dist
 tmp
 out-tsc
 *.tsbuildinfo
+__pycache__/
+*.py[cod]
 .expo
 .expo-shared
 
 # dependencies
 node_modules
+
+# Environment files and local secrets
+.env
+.env.*
+!.env.example
+backend/.env
 
 # IDEs and editors
 /.idea

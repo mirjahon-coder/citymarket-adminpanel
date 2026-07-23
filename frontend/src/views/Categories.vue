@@ -64,12 +64,10 @@
         </div>
         <div class="drawer-body">
           <div v-if="formError" class="alert alert-error" style="margin-bottom:16px;">{{ formError }}</div>
-
-          <!-- 1. Nomlar -->
-          <div class="form-section-title">🌐 Nomlar</div>
+          <div class="form-section-title">Asosiy ma'lumot</div>
           <div class="form-group">
-            <label class="form-label">Kategoriya nomi (asosiy) *</label>
-            <input v-model="form.name" type="text" class="form-control" placeholder="Kategoriya nomi" />
+            <label class="form-label">Kategoriya nomi *</label>
+            <input v-model="form.name" type="text" class="form-control" placeholder="Masalan: Elektronika" />
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -77,62 +75,16 @@
               <input v-model="form.name_uz" type="text" class="form-control" placeholder="O'zbekcha nomi" />
             </div>
             <div class="form-group">
-              <label class="form-label">Nomi (RU)</label>
-              <input v-model="form.name_ru" type="text" class="form-control" placeholder="Русское название" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nomi (EN)</label>
-            <input v-model="form.name_en" type="text" class="form-control" placeholder="English name" />
-          </div>
-
-          <!-- 2. Meta -->
-          <div class="form-section-title">🔗 Meta ma'lumotlar</div>
-          <div class="form-row">
-            <div class="form-group">
               <label class="form-label">Slug</label>
-              <input v-model="form.slug" type="text" class="form-control" placeholder="kategoriya-nomi" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Joylashuvi</label>
-              <input v-model="form.location" type="text" class="form-control" placeholder="Masalan: Toshkent" />
+              <input v-model="form.slug" type="text" class="form-control" placeholder="elektronika" />
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Tavsif</label>
-            <textarea v-model="form.description" class="form-control textarea" placeholder="Kategoriya haqida qisqacha..."></textarea>
-          </div>
-
-          <!-- 3. Rasmlar -->
-          <div class="form-section-title">🖼️ Rasmlar</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Ikonka URL</label>
-              <input v-model="form.icon_url" type="url" class="form-control" placeholder="https://.../icon.png" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Asosiy rasm URL</label>
-              <input v-model="form.image_url" type="url" class="form-control" placeholder="https://.../image.jpg" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Banner rasmi URL</label>
-              <input v-model="form.banner_url" type="url" class="form-control" placeholder="https://.../banner.jpg" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Cover rasmi URL</label>
-              <input v-model="form.cover_url" type="url" class="form-control" placeholder="https://.../cover.jpg" />
-            </div>
-          </div>
-
-          <!-- 4. Tartib -->
-          <div class="form-section-title">📋 Tartib va aloqa</div>
+          <div class="form-section-title">Tuzilma</div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Ota kategoriya</label>
               <select v-model="form.parent_id" class="form-control">
-                <option :value="null">— Yo'q (asosiy kategoriya) —</option>
+                <option :value="null">Yo'q, asosiy kategoriya</option>
                 <option v-for="c in parentOptions" :key="c.id" :value="c.id">{{ c.name }}</option>
               </select>
             </div>
@@ -141,42 +93,10 @@
               <input v-model.number="form.sort_order" type="number" class="form-control" placeholder="0" min="0" />
             </div>
           </div>
-
-          <!-- 5. Holat checkboxlar -->
-          <div class="form-section-title">✅ Holat va ko'rinish</div>
+          <div class="form-section-title">Ko'rinish</div>
           <div class="checkbox-grid">
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.is_active" />
-              <span>Faol</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.show_in_menu" />
-              <span>Menyuda ko'rsatish</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.show_on_home" />
-              <span>Asosiy sahifada ko'rsatish</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.is_popular" />
-              <span>Mashhur kategoriya</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.is_new" />
-              <span>Yangi kategoriya</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.is_recommended" />
-              <span>Tavsiya etilgan</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.filter_enabled" />
-              <span>Filtrlashni yoqish</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.show_in_discount" />
-              <span>Chegirma bo'limida ko'rsatish</span>
-            </label>
+            <label class="checkbox-item"><input type="checkbox" v-model="form.is_active" /><span>Faol</span></label>
+            <label class="checkbox-item"><input type="checkbox" v-model="form.show_in_menu" /><span>Menyuda ko'rsatish</span></label>
           </div>
         </div>
         <div class="drawer-footer">
