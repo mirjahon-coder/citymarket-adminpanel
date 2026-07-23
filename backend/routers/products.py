@@ -87,3 +87,23 @@ def delete_product_image(product_id: int, image_id: int, db: Session = Depends(g
     db.delete(image)
     db.commit()
     return {"message": "Rasm o'chirildi"}
+
+@router.post("/{product_id}/videos", response_model=schemas.ProductVideoOut)
+def add_product_video(product_id: int, data: schemas.VideoCreate, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+    product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    if not product:
+        raise HTTPException(404, "Mahsulot topilmadi")
+    video = models.ProductVideo(product_id=product_id, **data.model_dump())
+    db.add(video)
+    db.commit()
+    db.refresh(video)
+    return video
+
+@router.delete("/{product_id}/videos/{video_id}")
+def delete_product_video(product_id: int, video_id: int, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+    video = db.query(models.ProductVideo).filter(models.ProductVideo.id == video_id, models.ProductVideo.product_id == product_id).first()
+    if not video:
+        raise HTTPException(404, "Video topilmadi")
+    db.delete(video)
+    db.commit()
+    return {"message": "Video o'chirildi"}

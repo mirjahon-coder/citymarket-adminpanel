@@ -51,3 +51,19 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
     if admin is None or not admin.is_active:
         raise credentials_exception
     return admin
+
+
+def get_current_customer(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(status_code=401, detail="Customer token yaroqsiz")
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        subject = payload.get("sub", "")
+        if not subject.startswith("customer:"):
+            raise credentials_exception
+        customer_id = int(subject.split(":", 1)[1])
+    except (JWTError, ValueError):
+        raise credentials_exception
+    customer = db.query(models.CustomerUser).filter(models.CustomerUser.id == customer_id).first()
+    if not customer or not customer.is_active or customer.is_blocked:
+        raise credentials_exception
+    return customer

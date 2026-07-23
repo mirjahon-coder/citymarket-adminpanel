@@ -9,10 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from database import Base, engine
 import models
-from routers import auth, categories, products, baraban, users, dashboard
+from routers import auth, categories, products, baraban, users, dashboard, commerce, customer_features, admin_features
 from utils.auth import get_password_hash, verify_password
 
 app = FastAPI(
@@ -28,12 +29,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(customer_features.router)
+app.include_router(commerce.router)
 app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(baraban.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
+app.include_router(admin_features.router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent / "frontend_dist"
 if (FRONTEND_DIR / "assets").is_dir():
@@ -43,6 +47,10 @@ if (FRONTEND_DIR / "assets").is_dir():
 @app.on_event("startup")
 def startup():
     Base.metadata.create_all(bind=engine)
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)"))
+        connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20)"))
 
     db = Session(engine)
 

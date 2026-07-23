@@ -12,6 +12,7 @@ class AdminUser(Base):
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    roles = relationship("AdminRole", secondary="admin_user_roles", back_populates="admins")
 
 
 class Category(Base):
@@ -159,6 +160,7 @@ class Product(Base):
 
     category = relationship("Category", back_populates="products")
     images = relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")
+    videos = relationship("ProductVideo", back_populates="product", cascade="all, delete-orphan")
 
 
 class ProductImage(Base):
@@ -171,6 +173,16 @@ class ProductImage(Base):
     order_index = Column(Integer, default=0)
 
     product = relationship("Product", back_populates="images")
+
+
+class ProductVideo(Base):
+    __tablename__ = "product_videos"
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    video_url = Column(String(500), nullable=False)
+    title = Column(String(200), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    product = relationship("Product", back_populates="videos")
 
 
 class CustomerUser(Base):
@@ -186,8 +198,13 @@ class CustomerUser(Base):
     avatar_url = Column(String(500), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_login = Column(DateTime(timezone=True), nullable=True)
+    password_hash = Column(String(255), nullable=True)
+    birth_date = Column(String(20), nullable=True)
 
     orders = relationship("Order", back_populates="customer")
+    addresses = relationship("Address", back_populates="customer", cascade="all, delete-orphan")
+    cart = relationship("Cart", back_populates="customer", uselist=False, cascade="all, delete-orphan")
+    winnings = relationship("Winning", back_populates="customer", cascade="all, delete-orphan")
 
 
 class Order(Base):
@@ -214,6 +231,115 @@ class OrderItem(Base):
     unit_price = Column(Float, nullable=False)
 
     order = relationship("Order", back_populates="items")
+
+
+class Address(Base):
+    __tablename__ = "addresses"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customer_users.id"), nullable=False)
+    label = Column(String(50), default="uy")
+    address = Column(String(500), nullable=False)
+    city = Column(String(100), nullable=True)
+    apartment = Column(String(100), nullable=True)
+    is_default = Column(Boolean, default=False)
+    customer = relationship("CustomerUser", back_populates="addresses")
+
+
+class Cart(Base):
+    __tablename__ = "carts"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customer_users.id"), unique=True, nullable=False)
+    customer = relationship("CustomerUser", back_populates="cart")
+    items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
+
+
+class CartItem(Base):
+    __tablename__ = "cart_items"
+    id = Column(Integer, primary_key=True, index=True)
+    cart_id = Column(Integer, ForeignKey("carts.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, default=1)
+    cart = relationship("Cart", back_populates="items")
+    product = relationship("Product")
+
+
+class Winning(Base):
+    __tablename__ = "winnings"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customer_users.id"), nullable=False)
+    baraban_type = Column(String(20), nullable=False)
+    prize_name = Column(String(300), nullable=False)
+    qr_token = Column(String(100), unique=True, nullable=False)
+    status = Column(String(30), default="available")
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    customer = relationship("CustomerUser", back_populates="winnings")
+
+
+class SpinLog(Base):
+    __tablename__ = "spin_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customer_users.id"), nullable=False)
+    baraban_type = Column(String(20), nullable=False)
+    winning_id = Column(Integer, ForeignKey("winnings.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customer_users.id"), nullable=True)
+    title = Column(String(200), nullable=False)
+    body = Column(Text, nullable=False)
+    device_token = Column(String(500), nullable=True)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Banner(Base):
+    __tablename__ = "banners"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    image_url = Column(String(500), nullable=False)
+    link_url = Column(String(500), nullable=True)
+    is_active = Column(Boolean, default=True)
+    sort_order = Column(Integer, default=0)
+
+
+class Promotion(Base):
+    __tablename__ = "promotions"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    discount_percent = Column(Float, default=0)
+    starts_at = Column(DateTime(timezone=True), nullable=True)
+    ends_at = Column(DateTime(timezone=True), nullable=True)
+    is_active = Column(Boolean, default=True)
+
+
+class AdminRole(Base):
+    __tablename__ = "admin_roles"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), unique=True, nullable=False)
+    permissions = Column(JSON, default=list)
+    admins = relationship("AdminUser", secondary="admin_user_roles", back_populates="roles")
+
+
+class AdminUserRole(Base):
+    __tablename__ = "admin_user_roles"
+    admin_id = Column(Integer, ForeignKey("admin_users.id"), primary_key=True)
+    role_id = Column(Integer, ForeignKey("admin_roles.id"), primary_key=True)
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    admin_id = Column(Integer, nullable=True)
+    action = Column(String(100), nullable=False)
+    entity = Column(String(100), nullable=True)
+    entity_id = Column(Integer, nullable=True)
+    details = Column(JSON, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Baraban(Base):

@@ -12,6 +12,27 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class CustomerRegister(BaseModel):
+    phone: str
+    password: str
+    full_name: Optional[str] = None
+
+class CustomerProfileUpdate(BaseModel):
+    full_name: Optional[str] = None
+    birth_date: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+class AddressCreate(BaseModel):
+    label: str = "uy"
+    address: str
+    city: Optional[str] = None
+    apartment: Optional[str] = None
+    is_default: bool = False
+
+class AddressOut(AddressCreate):
+    id: int
+    class Config: from_attributes = True
+
 class AdminUserCreate(BaseModel):
     username: str
     password: str
@@ -290,6 +311,14 @@ class ProductUpdate(BaseModel):
     is_archived: Optional[bool] = None
     is_moderated: Optional[bool] = None
 
+class ProductVideoOut(BaseModel):
+    id: int
+    product_id: int
+    video_url: str
+    title: Optional[str]
+    created_at: datetime
+    class Config: from_attributes = True
+
 class ProductOut(BaseModel):
     id: int
     name: str
@@ -380,6 +409,7 @@ class ProductOut(BaseModel):
     is_moderated: bool
     created_at: datetime
     images: List[ProductImageOut] = []
+    videos: List[ProductVideoOut] = []
     class Config:
         from_attributes = True
 
@@ -398,6 +428,85 @@ class CustomerUserOut(BaseModel):
     last_login: Optional[datetime]
     class Config:
         from_attributes = True
+
+class CartItemCreate(BaseModel):
+    product_id: int
+    quantity: int = 1
+
+class CartItemUpdate(BaseModel):
+    quantity: int
+
+class CartItemOut(BaseModel):
+    id: int
+    product_id: int
+    quantity: int
+    product_name: str
+    unit_price: float
+
+class CartOut(BaseModel):
+    id: int
+    items: List[CartItemOut]
+    total_price: float
+
+class OrderCreate(BaseModel):
+    address_id: Optional[int] = None
+    payment_method: str = "cash"
+
+class WinningOut(BaseModel):
+    id: int
+    baraban_type: str
+    prize_name: str
+    qr_token: str
+    status: str
+    expires_at: Optional[datetime]
+    created_at: datetime
+    class Config: from_attributes = True
+
+class DeviceTokenCreate(BaseModel):
+    device_token: str
+
+class NotificationCreate(BaseModel):
+    title: str
+    body: str
+    customer_id: Optional[int] = None
+
+class NotificationOut(BaseModel):
+    id: int
+    customer_id: Optional[int]
+    title: str
+    body: str
+    is_read: bool
+    created_at: datetime
+    class Config: from_attributes = True
+
+class BannerCreate(BaseModel):
+    title: str
+    image_url: str
+    link_url: Optional[str] = None
+    is_active: bool = True
+    sort_order: int = 0
+
+class PromotionCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    discount_percent: float = 0
+    starts_at: Optional[datetime] = None
+    ends_at: Optional[datetime] = None
+    is_active: bool = True
+
+class RoleCreate(BaseModel):
+    name: str
+    permissions: List[str] = []
+
+class RoleAssignment(BaseModel):
+    role_id: int
+
+class VideoCreate(BaseModel):
+    video_url: str
+    title: Optional[str] = None
+
+class CashierVerify(BaseModel):
+    qr_token: str
 
 class BlockUserRequest(BaseModel):
     reason: Optional[str] = None
