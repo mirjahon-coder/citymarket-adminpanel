@@ -44,6 +44,22 @@ docker compose up -d --build
 
 The frontend uses relative `/api` requests, so no frontend API URL needs to be changed for an IP-only deployment.
 
+## Railway backend deployment
+
+The repository root contains `Dockerfile` and `railway.json`. Railway must deploy the root Dockerfile. It starts `/app/backend/main.py`, not the unrelated root `main.py` file.
+
+Add these Railway variables:
+
+```env
+DATABASE_URL=...
+SESSION_SECRET=...
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=...
+CORS_ORIGINS=https://YOUR-RAILWAY-DOMAIN.up.railway.app
+```
+
+Railway provides `PORT` automatically. The Dockerfile uses that port.
+
 ## Security checklist
 
 - Never commit `backend/.env`.
