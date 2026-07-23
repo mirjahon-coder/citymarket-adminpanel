@@ -1,10 +1,13 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from database import Base, engine
@@ -31,6 +34,10 @@ app.include_router(products.router)
 app.include_router(baraban.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
+
+FRONTEND_DIR = Path(__file__).resolve().parent / "frontend_dist"
+if (FRONTEND_DIR / "assets").is_dir():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
 
 @app.on_event("startup")
@@ -71,3 +78,20 @@ def health():
         "status": "ok",
         "message": "Do'kon Admin API v2 ishlayapti"
     }
+
+
+@app.get("/", include_in_schema=False)
+def frontend_index():
+    if not (FRONTEND_DIR / "index.html").is_file():
+        return {"status": "ok", "message": "City Market API ishlayapti. Frontend build topilmadi."}
+    return FileResponse(FRONTEND_DIR / "index.html")
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def frontend_fallback(full_path: str):
+    requested_file = FRONTEND_DIR / full_path
+    if requested_file.is_file():
+        return FileResponse(requested_file)
+    if (FRONTEND_DIR / "index.html").is_file():
+        return FileResponse(FRONTEND_DIR / "index.html")
+    return {"detail": "Not Found"}
