@@ -19,6 +19,7 @@ const routes = [
       { path: 'baraban', name: 'Baraban', component: () => import('../views/Baraban.vue') },
       { path: 'users', name: 'Users', component: () => import('../views/Users.vue') },
       { path: 'admins', name: 'Admins', component: () => import('../views/Admins.vue') },
+      { path: 'operations', name: 'Operations', component: () => import('../views/Operations.vue') },
     ]
   }
 ]

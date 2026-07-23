@@ -31,6 +31,10 @@
         <router-link to="/admins" class="nav-item" :class="{ active: route.path === '/admins' }">
           <span class="icon">⌁</span> Adminlar
         </router-link>
+        <div class="nav-section">Nazorat</div>
+        <router-link to="/operations" class="nav-item" :class="{ active: route.path === '/operations' }">
+          <span class="icon">◈</span> Operatsiyalar
+        </router-link>
       </nav>
       <div class="sidebar-footer">
         <div class="admin-profile">
@@ -74,6 +78,7 @@ const pageTitle = computed(() => {
     '/baraban': 'Baraban',
     '/users': 'Mijozlar',
     '/admins': 'Adminlar',
+    '/operations': 'Operatsiyalar',
   }
   return map[route.path] || 'Admin Panel'
 })
