@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from database import Base, engine
 import models
 from routers import auth, categories, products, baraban, users, dashboard
-from utils.auth import get_password_hash
+from utils.auth import get_password_hash, verify_password
 
 app = FastAPI(
     title="City Market API",
@@ -63,6 +63,10 @@ def startup():
             db.commit()
 
             print("✅ Default admin yaratildi")
+        elif admin and admin_password and not verify_password(admin_password, admin.hashed_password):
+            admin.hashed_password = get_password_hash(admin_password)
+            db.commit()
+            print("✅ Admin paroli environment qiymati bilan yangilandi")
         elif admin:
             print("✅ Admin allaqachon mavjud")
         else:
