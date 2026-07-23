@@ -28,8 +28,19 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
   const token = localStorage.getItem('token')
+
+  if (token && !authStore.user && to.meta.requiresAuth) {
+    try {
+      await authStore.fetchMe()
+    } catch {
+      next('/login')
+      return
+    }
+  }
+
   if (to.meta.requiresAuth && !token) {
     next('/login')
   } else if (to.meta.guest && token) {
