@@ -1,0 +1,105 @@
+API endpointlar ro'yxati
+========================
+Base URL: http://localhost:8000
+
+Umumiy
+- GET /api/health
+
+Auth
+- POST /api/auth/register
+- POST /api/auth/customer-login
+- POST /api/auth/verify-sms
+- POST /api/auth/login
+- GET /api/auth/me
+- POST /api/auth/admins
+- GET /api/auth/admins
+
+Kategoriyalar
+- GET /api/categories
+- POST /api/categories
+- GET /api/categories/{category_id}
+- PUT /api/categories/{category_id}
+- DELETE /api/categories/{category_id}
+
+Mahsulotlar
+- GET /api/products
+- POST /api/products
+- GET /api/products/{product_id}
+- PUT /api/products/{product_id}
+- DELETE /api/products/{product_id}
+- POST /api/products/{product_id}/images
+- DELETE /api/products/{product_id}/images/{image_id}
+- POST /api/products/{product_id}/videos
+- DELETE /api/products/{product_id}/videos/{video_id}
+
+Baraban
+- GET /api/baraban
+- POST /api/baraban
+- GET /api/baraban/{baraban_id}
+- PUT /api/baraban/{baraban_id}
+- DELETE /api/baraban/{baraban_id}
+- POST /api/baraban/{baraban_id}/prizes
+- PUT /api/baraban/{baraban_id}/prizes/{prize_id}
+- DELETE /api/baraban/{baraban_id}/prizes/{prize_id}
+
+Foydalanuvchilar
+- GET /api/users/me
+- PUT /api/users/me
+- GET /api/users/me/addresses
+- POST /api/users/me/addresses
+- PUT /api/users/me/addresses/{address_id}
+- DELETE /api/users/me/addresses/{address_id}
+- GET /api/users/me/winnings
+- GET /api/users
+- GET /api/users/{user_id}
+- GET /api/users/{user_id}/orders
+- POST /api/users/{user_id}/block
+- POST /api/users/{user_id}/unblock
+
+Dashboard
+- GET /api/dashboard/stats
+
+Savat va buyurtmalar
+- GET /api/cart
+- POST /api/cart/items
+- PUT /api/cart/items/{item_id}
+- DELETE /api/cart/items/{item_id}
+- POST /api/orders
+- GET /api/orders
+- GET /api/orders/{order_id}
+- POST /api/orders/{order_id}/cancel
+
+Mijozlarga oid funksiyalar
+- GET /api/baraban/big
+- GET /api/baraban/small
+- POST /api/baraban/big/spin
+- POST /api/baraban/small/spin
+- GET /api/baraban/{baraban_id}/stats
+- GET /api/winnings/{winning_id}/qr
+- POST /api/cashier/verify-check
+- POST /api/cashier/confirm-prize
+- GET /api/cashier/audit
+- POST /api/notifications/register-device
+- GET /api/notifications
+- GET /api/notifications/history
+- POST /api/notifications/send
+- POST /api/notifications/register
+
+Admin funksiyalar
+- GET /api/banners
+- POST /api/banners
+- PUT /api/banners/{item_id}
+- DELETE /api/banners/{item_id}
+- GET /api/promotions
+- POST /api/promotions
+- PUT /api/promotions/{item_id}
+- DELETE /api/promotions/{item_id}
+- GET /api/roles
+- POST /api/roles
+- PUT /api/roles/{item_id}
+- DELETE /api/roles/{item_id}
+- GET /api/audit-logs
+- GET /api/admins/{admin_id}/roles
+- POST /api/admins/{admin_id}/roles
+- PUT /api/admins/{admin_id}/roles
+- DELETE /api/admins/{admin_id}/roles

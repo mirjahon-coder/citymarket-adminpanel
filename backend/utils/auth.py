@@ -36,14 +36,20 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Token yaroqsiz yoki muddati o'tgan",
+        detail="Admin token yaroqsiz, muddati o'tgan yoki ruxsat etilmagan",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        subject: str = payload.get("sub")
+        if subject is None:
             raise credentials_exception
+        if subject.startswith("admin:"):
+            username = subject.split(":", 1)[1]
+        elif subject.startswith("customer:"):
+            raise credentials_exception
+        else:
+            username = subject
     except JWTError:
         raise credentials_exception
 

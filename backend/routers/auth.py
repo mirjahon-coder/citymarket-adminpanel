@@ -42,7 +42,7 @@ def login(request: schemas.LoginRequest, db: Session = Depends(get_db)):
     if not admin.is_active:
         raise HTTPException(status_code=400, detail="Foydalanuvchi bloklangan")
     
-    token = create_access_token(data={"sub": admin.username})
+    token = create_access_token(data={"sub": f"admin:{admin.username}"})
     return {"access_token": token, "token_type": "bearer"}
 
 
