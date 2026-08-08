@@ -525,6 +525,10 @@ class OrderOut(BaseModel):
     id: int
     status: str
     total_price: float
+    payment_status: str
+    paid_at: Optional[datetime]
+    click_trans_id: Optional[int]
+    click_paydoc_id: Optional[int]
     created_at: datetime
     items: List[OrderItemOut] = []
     class Config:

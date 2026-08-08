@@ -13,7 +13,7 @@ from sqlalchemy import text
 
 from database import Base, engine
 import models
-from routers import auth, categories, products, baraban, users, dashboard, commerce, customer_features, admin_features
+from routers import auth, categories, products, baraban, users, dashboard, commerce, customer_features, admin_features, click
 from utils.auth import get_password_hash, verify_password
 
 app = FastAPI(
@@ -38,6 +38,7 @@ app.include_router(baraban.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(admin_features.router)
+app.include_router(click.router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent / "frontend_dist"
 if (FRONTEND_DIR / "assets").is_dir():
@@ -51,6 +52,10 @@ def startup():
     with engine.begin() as connection:
         connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)"))
         connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20)"))
+        connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS click_trans_id BIGINT"))
+        connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS click_paydoc_id BIGINT"))
+        connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status VARCHAR(50) DEFAULT 'pending' NOT NULL"))
+        connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP"))
 
     db = Session(engine)
 

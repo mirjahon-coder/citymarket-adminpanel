@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from database import get_db
 import models, schemas
 from utils.auth import get_current_admin
@@ -68,6 +68,14 @@ def delete_promotion(item_id: int, db: Session = Depends(get_db), _=Depends(get_
 @router.get("/api/roles")
 def list_roles(db: Session = Depends(get_db), _=Depends(get_current_admin)):
     return crud_list(models.AdminRole, db)
+
+
+@router.get("/api/admin/transactions", response_model=list[schemas.OrderOut])
+def list_transactions(payment_status: str | None = None, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+    query = db.query(models.Order).options(joinedload(models.Order.items)).order_by(models.Order.created_at.desc())
+    if payment_status:
+        query = query.filter(models.Order.payment_status == payment_status)
+    return query.all()
 
 @router.post("/api/roles")
 def create_role(data: schemas.RoleCreate, db: Session = Depends(get_db), _=Depends(get_current_admin)):

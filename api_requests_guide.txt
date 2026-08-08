@@ -1,0 +1,506 @@
+Mobil ilova uchun API request guide
+==================================
+Base URL: http://localhost:8000
+
+Umumiy qoidalar
+- Har bir so'rovda Content-Type: application/json
+- Agar endpoint auth talab qilsa, Authorization: Bearer <token>
+- Token olish uchun /api/auth/login yoki /api/auth/customer-login dan olinadi
+
+1) AUTH
+
+POST /api/auth/register
+Body:
+{
+  "phone": "+998901234567",
+  "password": "123456",
+  "full_name": "Ali"
+}
+
+POST /api/auth/customer-login
+Body:
+{
+  "phone": "+998901234567",
+  "password": "123456"
+}
+
+POST /api/auth/verify-sms
+Body:
+{
+  "phone": "+998901234567",
+  "password": "123456"
+}
+
+POST /api/auth/login
+Body:
+{
+  "username": "admin",
+  "password": "123456"
+}
+
+GET /api/auth/me
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/auth/admins
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "username": "newadmin",
+  "password": "123456"
+}
+
+GET /api/auth/admins
+Headers:
+Authorization: Bearer <admin_token>
+
+2) CATEGORIES
+
+GET /api/categories
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/categories
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Elektronika",
+  "name_uz": "Elektronika",
+  "slug": "elektronika",
+  "is_active": true
+}
+
+GET /api/categories/{category_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+PUT /api/categories/{category_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Yangi nom"
+}
+
+DELETE /api/categories/{category_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+3) PRODUCTS
+
+GET /api/products
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/products
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Smartfon",
+  "price": 10000000,
+  "stock": 20,
+  "is_active": true
+}
+
+GET /api/products/{product_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+PUT /api/products/{product_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "price": 9500000,
+  "stock": 15
+}
+
+DELETE /api/products/{product_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/products/{product_id}/images
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "image_url": "https://example.com/image.jpg",
+  "is_primary": true
+}
+
+DELETE /api/products/{product_id}/images/{image_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/products/{product_id}/videos
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "video_url": "https://example.com/video.mp4",
+  "title": "Demo"
+}
+
+DELETE /api/products/{product_id}/videos/{video_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+4) BARABAN
+
+GET /api/baraban
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/baraban
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Yangi baraban",
+  "target_audience": "kattalar",
+  "is_active": true
+}
+
+GET /api/baraban/{baraban_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+PUT /api/baraban/{baraban_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Yangilangan baraban"
+}
+
+DELETE /api/baraban/{baraban_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/baraban/{baraban_id}/prizes
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Chegirma",
+  "probability_value": 10,
+  "total_count": 5,
+  "is_active": true
+}
+
+PUT /api/baraban/{baraban_id}/prizes/{prize_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "total_count": 3
+}
+
+DELETE /api/baraban/{baraban_id}/prizes/{prize_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+5) USERS
+
+GET /api/users/me
+Headers:
+Authorization: Bearer <customer_token>
+
+PUT /api/users/me
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "full_name": "Ali Valiev"
+}
+
+GET /api/users/me/addresses
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/users/me/addresses
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "label": "uy",
+  "address": "Toshkent, Chilonzor",
+  "city": "Toshkent",
+  "is_default": true
+}
+
+PUT /api/users/me/addresses/{address_id}
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "label": "ish",
+  "address": "Toshkent, Yunusobod",
+  "city": "Toshkent",
+  "is_default": false
+}
+
+DELETE /api/users/me/addresses/{address_id}
+Headers:
+Authorization: Bearer <customer_token>
+
+GET /api/users/me/winnings
+Headers:
+Authorization: Bearer <customer_token>
+
+GET /api/users
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/users/{user_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/users/{user_id}/orders
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/users/{user_id}/block
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "reason": "Spam"
+}
+
+POST /api/users/{user_id}/unblock
+Headers:
+Authorization: Bearer <admin_token>
+
+6) DASHBOARD
+
+GET /api/dashboard/stats
+Headers:
+Authorization: Bearer <admin_token>
+
+7) CART AND ORDERS
+
+GET /api/cart
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/cart/items
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "product_id": 1,
+  "quantity": 1
+}
+
+PUT /api/cart/items/{item_id}
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "quantity": 2
+}
+
+DELETE /api/cart/items/{item_id}
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/orders
+Headers:
+Authorization: Bearer <customer_token>
+Body: {}
+
+GET /api/orders
+Headers:
+Authorization: Bearer <customer_token>
+
+GET /api/orders/{order_id}
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/orders/{order_id}/cancel
+Headers:
+Authorization: Bearer <customer_token>
+
+8) CUSTOMER FEATURES
+
+GET /api/baraban/big
+
+GET /api/baraban/small
+
+POST /api/baraban/big/spin
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/baraban/small/spin
+Headers:
+Authorization: Bearer <customer_token>
+
+GET /api/baraban/{baraban_id}/stats
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/winnings/{winning_id}/qr
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/cashier/verify-check
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "qr_token": "your_qr_token_here"
+}
+
+POST /api/cashier/confirm-prize
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "qr_token": "your_qr_token_here"
+}
+
+GET /api/cashier/audit
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/notifications/register-device
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "device_token": "fcm_token_here"
+}
+
+GET /api/notifications
+Headers:
+Authorization: Bearer <customer_token>
+
+GET /api/notifications/history
+Headers:
+Authorization: Bearer <customer_token>
+
+POST /api/notifications/send
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "title": "Yangi xabar",
+  "body": "Bu test xabari",
+  "customer_id": 1
+}
+
+POST /api/notifications/register
+Headers:
+Authorization: Bearer <customer_token>
+Body:
+{
+  "device_token": "fcm_token_here"
+}
+
+9) ADMIN FEATURES
+
+GET /api/banners
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/banners
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "title": "Banner",
+  "image_url": "https://example.com/banner.jpg"
+}
+
+PUT /api/banners/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "title": "Yangilangan banner"
+}
+
+DELETE /api/banners/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/promotions
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/promotions
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "title": "Promokod",
+  "discount": 10
+}
+
+PUT /api/promotions/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "discount": 20
+}
+
+DELETE /api/promotions/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/roles
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/roles
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Manager"
+}
+
+PUT /api/roles/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "name": "Super Manager"
+}
+
+DELETE /api/roles/{item_id}
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/audit-logs
+Headers:
+Authorization: Bearer <admin_token>
+
+GET /api/admins/{admin_id}/roles
+Headers:
+Authorization: Bearer <admin_token>
+
+POST /api/admins/{admin_id}/roles
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "role_id": 1
+}
+
+PUT /api/admins/{admin_id}/roles
+Headers:
+Authorization: Bearer <admin_token>
+Body:
+{
+  "role_id": 2
+}
+
+DELETE /api/admins/{admin_id}/roles
+Headers:
+Authorization: Bearer <admin_token>

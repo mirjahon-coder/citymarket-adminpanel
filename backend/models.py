@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime, ForeignKey, JSON, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database import Base
@@ -214,6 +214,10 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey("customer_users.id"), nullable=False)
     status = Column(String(50), default="pending")
     total_price = Column(Float, nullable=False, default=0.0)
+    click_trans_id = Column(BigInteger, nullable=True)
+    click_paydoc_id = Column(BigInteger, nullable=True)
+    payment_status = Column(String(50), default="pending", nullable=False)
+    paid_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     customer = relationship("CustomerUser", back_populates="orders")
