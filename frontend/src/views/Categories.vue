@@ -23,6 +23,7 @@
               <th>Ota kategoriya</th>
               <th>Tartib</th>
               <th>Holati</th>
+              <th>Asosiy</th>
               <th>Yaratilgan</th>
               <th>Amallar</th>
             </tr>
@@ -40,6 +41,11 @@
               <td>
                 <span :class="cat.is_active ? 'badge badge-success' : 'badge badge-danger'">
                   {{ cat.is_active ? 'Faol' : 'Nofaol' }}
+                </span>
+              </td>
+              <td>
+                <span :class="cat.show_on_home ? 'badge badge-success' : 'badge badge-secondary'">
+                  {{ cat.show_on_home ? 'Ha' : 'Yo‘q' }}
                 </span>
               </td>
               <td>{{ formatDate(cat.created_at) }}</td>
@@ -97,6 +103,7 @@
           <div class="checkbox-grid">
             <label class="checkbox-item"><input type="checkbox" v-model="form.is_active" /><span>Faol</span></label>
             <label class="checkbox-item"><input type="checkbox" v-model="form.show_in_menu" /><span>Menyuda ko'rsatish</span></label>
+            <label class="checkbox-item"><input type="checkbox" v-model="form.show_on_home" /><span>Asosiy sahifada ko'rsatish</span></label>
           </div>
         </div>
         <div class="drawer-footer">

@@ -15,6 +15,10 @@ def crud_list(model, db):
 def list_banners(db: Session = Depends(get_db)):
     return crud_list(models.Banner, db)
 
+@router.get("/api/banners/home")
+def list_home_banners(db: Session = Depends(get_db)):
+    return db.query(models.Banner).filter(models.Banner.is_active == True).order_by(models.Banner.sort_order).all()
+
 @router.post("/api/banners")
 def create_banner(data: schemas.BannerCreate, db: Session = Depends(get_db), _=Depends(get_current_admin)):
     item = models.Banner(**data.model_dump())
@@ -38,6 +42,10 @@ def delete_banner(item_id: int, db: Session = Depends(get_db), _=Depends(get_cur
 @router.get("/api/promotions")
 def list_promotions(db: Session = Depends(get_db)):
     return crud_list(models.Promotion, db)
+
+@router.get("/api/promotions/home")
+def list_home_promotions(db: Session = Depends(get_db)):
+    return db.query(models.Promotion).filter(models.Promotion.is_active == True).order_by(models.Promotion.starts_at).all()
 
 @router.post("/api/promotions")
 def create_promotion(data: schemas.PromotionCreate, db: Session = Depends(get_db), _=Depends(get_current_admin)):

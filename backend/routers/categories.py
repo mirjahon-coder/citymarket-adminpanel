@@ -10,8 +10,20 @@ router = APIRouter(prefix="/api/categories", tags=["categories"])
 
 
 @router.get("", response_model=List[schemas.CategoryOut])
-def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(models.Category).offset(skip).limit(limit).all()
+
+
+@router.get("/home", response_model=List[schemas.CategoryOut])
+def get_home_categories(skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
+    return (
+        db.query(models.Category)
+        .filter(models.Category.is_active == True, models.Category.show_on_home == True)
+        .order_by(models.Category.sort_order)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 @router.post("", response_model=schemas.CategoryOut)
@@ -24,7 +36,7 @@ def create_category(data: schemas.CategoryCreate, db: Session = Depends(get_db),
 
 
 @router.get("/{category_id}", response_model=schemas.CategoryOut)
-def get_category(category_id: int, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+def get_category(category_id: int, db: Session = Depends(get_db)):
     cat = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not cat:
         raise HTTPException(status_code=404, detail="Kategoriya topilmadi")

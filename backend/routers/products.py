@@ -15,8 +15,7 @@ def get_products(
     limit: int = 50,
     category_id: Optional[int] = None,
     search: Optional[str] = None,
-    db: Session = Depends(get_db),
-    _=Depends(get_current_admin)
+    db: Session = Depends(get_db)
 ):
     query = db.query(models.Product).options(joinedload(models.Product.images))
     if category_id:
@@ -36,7 +35,7 @@ def create_product(data: schemas.ProductCreate, db: Session = Depends(get_db), _
 
 
 @router.get("/{product_id}", response_model=schemas.ProductOut)
-def get_product(product_id: int, db: Session = Depends(get_db), _=Depends(get_current_admin)):
+def get_product(product_id: int, db: Session = Depends(get_db)):
     product = db.query(models.Product).options(joinedload(models.Product.images)).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Mahsulot topilmadi")
