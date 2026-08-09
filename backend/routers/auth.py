@@ -69,7 +69,7 @@ def generate_otp() -> str:
     return f"{random.randint(0, 9999):04d}"
 
 
-def send_dev_sms(phone: str, otp_code: str) -> dict:
+def send_dev_sms(phone: str, otp_code: str | None = None, message: str | None = None) -> dict:
     if not DEVSMS_API_TOKEN:
         raise HTTPException(status_code=500, detail="SMS xizmatini sozlashda muammo bor")
 
@@ -78,8 +78,11 @@ def send_dev_sms(phone: str, otp_code: str) -> dict:
         "type": "universal_otp",
         "template_type": SMS_TEMPLATE_TYPE,
         "service_name": SERVICE_NAME,
-        "otp_code": otp_code,
     }
+    if otp_code is not None:
+        payload["otp_code"] = otp_code
+    if message is not None:
+        payload["message"] = message
     data = json.dumps(payload).encode('utf-8')
     headers = {
         'Content-Type': 'application/json',

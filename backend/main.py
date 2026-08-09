@@ -1,8 +1,13 @@
 import os
+import sys
 from pathlib import Path
 
+BACKEND_DIR = Path(__file__).resolve().parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
+
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(BACKEND_DIR / ".env")
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +18,7 @@ from sqlalchemy import text
 
 from database import Base, engine
 import models
-from routers import auth, categories, products, baraban, users, dashboard, commerce, customer_features, admin_features, click
+from routers import auth, categories, products, baraban, users, dashboard, commerce, customer_features, admin_features, click, sms
 from utils.auth import get_password_hash, verify_password
 
 app = FastAPI(
@@ -32,6 +37,7 @@ app.add_middleware(
 app.include_router(customer_features.router)
 app.include_router(commerce.router)
 app.include_router(auth.router)
+app.include_router(sms.router)
 app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(baraban.router)

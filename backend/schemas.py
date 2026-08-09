@@ -75,6 +75,23 @@ class SmsRequestOut(BaseModel):
         from_attributes = True
 
 
+class SmsSendRequest(BaseModel):
+    phone: str
+    message: str = "Test SMS"
+
+
+class SmsStatusResponse(BaseModel):
+    provider: str
+    configured: bool
+    message: str
+
+
+class SmsSendResponse(BaseModel):
+    success: bool
+    message: str
+    provider_response: Optional[Dict[str, Any]] = None
+
+
 # ─── Category ───────────────────────────────────────────────────────────────
 class CategoryCreate(BaseModel):
     name: str

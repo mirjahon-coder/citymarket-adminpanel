@@ -9,13 +9,10 @@ import models
 
 router = APIRouter(tags=["click"])
 
-CLICK_SERVICE_ID = os.getenv("CLICK_SERVICE_ID")
-CLICK_MERCHANT_ID = os.getenv("CLICK_MERCHANT_ID")
-CLICK_SECRET_KEY = os.getenv("CLICK_SECRET_KEY")
-CLICK_MERCHANT_USER_ID = os.getenv("CLICK_MERCHANT_USER_ID")
-
-if not CLICK_SERVICE_ID or not CLICK_MERCHANT_ID or not CLICK_SECRET_KEY:
-    raise RuntimeError("CLICK_SERVICE_ID, CLICK_MERCHANT_ID va CLICK_SECRET_KEY .env fayldan o'qilishi kerak")
+CLICK_SERVICE_ID = os.getenv("CLICK_SERVICE_ID", "")
+CLICK_MERCHANT_ID = os.getenv("CLICK_MERCHANT_ID", "")
+CLICK_SECRET_KEY = os.getenv("CLICK_SECRET_KEY", "")
+CLICK_MERCHANT_USER_ID = os.getenv("CLICK_MERCHANT_USER_ID", "")
 
 
 def verify_click_sign(
