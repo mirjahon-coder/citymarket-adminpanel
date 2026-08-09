@@ -199,12 +199,31 @@ class CustomerUser(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_login = Column(DateTime(timezone=True), nullable=True)
     password_hash = Column(String(255), nullable=True)
+    phone_verified = Column(Boolean, default=False)
+    phone_verified_at = Column(DateTime(timezone=True), nullable=True)
     birth_date = Column(String(20), nullable=True)
 
     orders = relationship("Order", back_populates="customer")
     addresses = relationship("Address", back_populates="customer", cascade="all, delete-orphan")
     cart = relationship("Cart", back_populates="customer", uselist=False, cascade="all, delete-orphan")
     winnings = relationship("Winning", back_populates="customer", cascade="all, delete-orphan")
+
+
+class PhoneOtp(Base):
+    __tablename__ = "phone_otps"
+
+    id = Column(Integer, primary_key=True, index=True)
+    phone = Column(String(20), index=True, nullable=False)
+    otp_hash = Column(String(128), nullable=False)
+    status = Column(String(20), nullable=False, default="pending")
+    sms_status = Column(String(20), nullable=False, default="pending")
+    attempts = Column(Integer, nullable=False, default=0)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    sms_id = Column(String(255), nullable=True)
+    request_id = Column(String(255), nullable=True)
+    response_body = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Order(Base):

@@ -45,6 +45,11 @@
       <div class="ops-grid"><article v-for="role in roles" :key="role.id" class="ops-item role-item"><div class="role-symbol">⌁</div><div><strong>{{ role.name }}</strong><small>{{ (role.permissions || []).join(', ') || 'Ruxsatlar belgilanmagan' }}</small></div><button class="btn btn-sm btn-danger" @click="remove('/api/roles/' + role.id, loadRoles)">O'chirish</button></article></div>
     </section>
 
+    <section v-if="currentTab === 'sms'" class="card">
+      <div class="card-header"><div><div class="eyebrow">SMS</div><div class="card-title">SMS yuborish loglari</div></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Telefon</th><th>Holat</th><th>SMS holati</th><th>Urinishlar</th><th>Yuborilgan</th><th>Muddati</th></tr></thead><tbody><tr v-for="item in smsRequests" :key="item.id"><td class="fw-600">{{ item.phone }}</td><td>{{ item.status }}</td><td>{{ item.sms_status }}</td><td>{{ item.attempts }}</td><td>{{ formatDate(item.sent_at) }}</td><td>{{ formatDate(item.expires_at) }}</td></tr></tbody></table></div>
+    </section>
+
     <section v-if="currentTab === 'audit'" class="card">
       <div class="card-header"><div><div class="eyebrow">Security</div><div class="card-title">Audit log</div></div></div>
       <div class="table-wrap"><table><thead><tr><th>Harakat</th><th>Entity</th><th>ID</th><th>Sana</th></tr></thead><tbody><tr v-for="entry in audit" :key="entry.id"><td class="fw-600">{{ entry.action }}</td><td>{{ entry.entity || '-' }}</td><td>{{ entry.entity_id || '-' }}</td><td>{{ formatDate(entry.created_at) }}</td></tr></tbody></table></div>
@@ -62,9 +67,9 @@
 import { ref, onMounted } from 'vue'
 import api from '../api.js'
 
-const tabs = [{ key: 'banners', label: 'Bannerlar' }, { key: 'promotions', label: 'Aksiyalar' }, { key: 'cashier', label: 'Kassir' }, { key: 'notifications', label: 'Push xabar' }, { key: 'roles', label: 'Rollar' }, { key: 'audit', label: 'Audit log' }]
+const tabs = [{ key: 'banners', label: 'Bannerlar' }, { key: 'promotions', label: 'Aksiyalar' }, { key: 'cashier', label: 'Kassir' }, { key: 'notifications', label: 'Push xabar' }, { key: 'roles', label: 'Rollar' }, { key: 'sms', label: 'SMS log' }, { key: 'audit', label: 'Audit log' }]
 const currentTab = ref('banners')
-const banners = ref([]); const promotions = ref([]); const roles = ref([]); const audit = ref([])
+const banners = ref([]); const promotions = ref([]); const roles = ref([]); const smsRequests = ref([]); const audit = ref([])
 const qrToken = ref(''); const winning = ref(null); const error = ref(''); const success = ref(''); const modal = ref(null)
 const bannerForm = ref({ title: '', image_url: '', link_url: '', is_active: true, sort_order: 0 })
 const promotionForm = ref({ title: '', description: '', discount_percent: 0, ends_at: null, is_active: true })
@@ -76,7 +81,8 @@ async function loadBanners() { banners.value = (await api.get('/api/banners')).d
 async function loadPromotions() { promotions.value = (await api.get('/api/promotions')).data }
 async function loadRoles() { roles.value = (await api.get('/api/roles')).data }
 async function loadAudit() { audit.value = (await api.get('/api/audit-logs')).data }
-async function loadAll() { clearMessage(); await Promise.all([loadBanners(), loadPromotions(), loadRoles(), loadAudit()]) }
+async function loadSmsRequests() { smsRequests.value = (await api.get('/api/admin/sms-requests')).data }
+async function loadAll() { clearMessage(); await Promise.all([loadBanners(), loadPromotions(), loadRoles(), loadSmsRequests(), loadAudit()]) }
 function openBanner() { bannerForm.value = { title: '', image_url: '', link_url: '', is_active: true, sort_order: 0 }; modal.value = 'banner' }
 function openPromotion() { promotionForm.value = { title: '', description: '', discount_percent: 0, ends_at: null, is_active: true }; modal.value = 'promotion' }
 function openRole() { roleForm.value = { name: '', permissions: [] }; rolePermissions.value = ''; modal.value = 'role' }

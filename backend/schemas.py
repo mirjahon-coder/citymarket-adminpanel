@@ -17,6 +17,18 @@ class CustomerRegister(BaseModel):
     password: str
     full_name: Optional[str] = None
 
+class RegisterOtpRequest(BaseModel):
+    phone: str
+
+class RegisterOtpVerify(BaseModel):
+    phone: str
+    otp_code: str
+
+class RegisterComplete(BaseModel):
+    phone: str
+    full_name: Optional[str] = None
+    password: Optional[str] = None
+
 class CustomerProfileUpdate(BaseModel):
     full_name: Optional[str] = None
     birth_date: Optional[str] = None

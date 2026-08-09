@@ -99,6 +99,10 @@ def delete_role(item_id: int, db: Session = Depends(get_db), _=Depends(get_curre
 def audit_logs(db: Session = Depends(get_db), _=Depends(get_current_admin)):
     return db.query(models.AuditLog).order_by(models.AuditLog.created_at.desc()).limit(200).all()
 
+@router.get("/api/admin/sms-requests", response_model=list[schemas.SmsRequestOut])
+def list_sms_requests(db: Session = Depends(get_db), _=Depends(get_current_admin)):
+    return db.query(models.PhoneOtp).order_by(models.PhoneOtp.created_at.desc()).limit(200).all()
+
 @router.get("/api/admins/{admin_id}/roles")
 def list_admin_roles(admin_id: int, db: Session = Depends(get_db), _=Depends(get_current_admin)):
     admin = db.query(models.AdminUser).filter(models.AdminUser.id == admin_id).first()

@@ -52,6 +52,8 @@ def startup():
     with engine.begin() as connection:
         connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)"))
         connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20)"))
+        connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN DEFAULT FALSE NOT NULL"))
+        connection.execute(text("ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS phone_verified_at TIMESTAMP"))
         connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS click_trans_id BIGINT"))
         connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS click_paydoc_id BIGINT"))
         connection.execute(text("ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status VARCHAR(50) DEFAULT 'pending' NOT NULL"))
