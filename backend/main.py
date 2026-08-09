@@ -41,6 +41,11 @@ app.include_router(admin_features.router)
 app.include_router(click.router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent / "frontend_dist"
+if not FRONTEND_DIR.exists():
+    candidate = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+    if candidate.exists():
+        FRONTEND_DIR = candidate
+
 if (FRONTEND_DIR / "assets").is_dir():
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
