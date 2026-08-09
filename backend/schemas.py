@@ -58,6 +58,23 @@ class AdminUserOut(BaseModel):
         from_attributes = True
 
 
+class SmsRequestOut(BaseModel):
+    id: int
+    phone: str
+    status: str
+    sms_status: str
+    attempts: int
+    created_at: datetime
+    expires_at: datetime
+    sent_at: Optional[datetime]
+    sms_id: Optional[str]
+    request_id: Optional[str]
+    response_body: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
 # ─── Category ───────────────────────────────────────────────────────────────
 class CategoryCreate(BaseModel):
     name: str
